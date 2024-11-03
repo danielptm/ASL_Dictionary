@@ -15,9 +15,9 @@ class SignDataLocalStore : SignDataInterface  {
     var map: HashMap<String, SignData> = HashMap<String, SignData> ()
 
     init {
-        map.put("abc", SignData("HelloSign.png", "asdf", "Hello"))
-        map.put("def", SignData("not_found.png", "asdf", "asdf"))
-        map.put("ghi", SignData("ThankYouSign.png", "asdf", "Thank You"))
+        map.put("Hello", SignData("HelloSign.png", "asdf", "Hello"))
+        map.put("asdf", SignData("not_found.png", "asdf", "asdf"))
+        map.put("Thank You", SignData("ThankYouSign.png", "asdf", "Thank You"))
     }
 
 
@@ -29,13 +29,13 @@ class SignDataLocalStore : SignDataInterface  {
         return list;
     }
 
-    override fun getSignDataByText(): SignData {
-        return SignData("", "", "")
+    override fun getSignDataByText(word: String): SignData {
+        return map.getOrElse(word, {SignData("not_found.png", "n/a", "n/a")});
     }
 
 }
 
 interface SignDataInterface {
     fun getData(): List<SignData>;
-    fun getSignDataByText(): SignData;
+    fun getSignDataByText(word: String): SignData;
 }
