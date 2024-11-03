@@ -1,11 +1,6 @@
 package com.gatech.asl_dictionary
 
 import android.content.Context
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
-import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,24 +29,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.gatech.asl_dictionary.model.SignEntry
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-suspend fun loadSignEntries(context: Context): List<SignEntry> {
-    return withContext(Dispatchers.IO) {
-        val jsonString = context.assets.open("Signs.json").bufferedReader().use { it.readText() }
-        val listType = object : TypeToken<List<SignEntry>>() {}.type
-        Gson().fromJson(jsonString, listType)
-    }
+suspend fun loadSignEntries(context: Context): List<SignData> {
+    val sdi: SignDataInterface = SignDataLocalStore();
+    val res = sdi.getData();
+
+    return res
 }
 
 @Composable
 fun Search(navigationToSecondScreen: (String) -> Unit) {
     val context = LocalContext.current
-    var signEntries by remember { mutableStateOf(emptyList<SignEntry>()) }
+    var signEntries by remember { mutableStateOf(emptyList<SignData>()) }
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -101,7 +90,7 @@ fun Search(navigationToSecondScreen: (String) -> Unit) {
 }
 
 @Composable
-fun SignBox(signEntry: SignEntry, onClick: () -> Unit) {
+fun SignBox(signEntry: SignData, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
