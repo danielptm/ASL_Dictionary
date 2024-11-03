@@ -41,10 +41,6 @@ fun Start() {
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            Text(
-                text = "Current Screen: $currentScreen",
-                modifier = Modifier.align(Alignment.Center)
-            )
             NavHost(navController = navController, startDestination = "search") {
                 currentScreen = "Search"
                 composable("search") {
