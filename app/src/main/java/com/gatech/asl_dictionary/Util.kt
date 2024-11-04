@@ -29,7 +29,7 @@ class SignDataLocalStore : SignDataInterface  {
     }
 
     override fun getSignDataByText(word: String): SignData {
-        return map.getOrElse(word, {SignData("not_found.png", "n/a", "n/a")});
+        return map.getOrElse(word, {SignData("", "", "")});
     }
 
 }

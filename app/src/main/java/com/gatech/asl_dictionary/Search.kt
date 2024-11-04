@@ -1,6 +1,8 @@
 package com.gatech.asl_dictionary
 
 import android.content.Context
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -90,8 +92,14 @@ fun Search(navController: NavController) {
             )
             Button(onClick = {
                 val res = searchByText(inputText)
-                val param = res.word + "|" + res.imagePath + "|" + res.videoPath
-                navController.navigate("result/" + param)
+                if (res.word == "") {
+                    val toast = Toast.makeText(context, "Not found", Toast.LENGTH_LONG)
+                    toast.setGravity(Gravity.CENTER, 0 , 0)
+                    toast.show()
+                } else {
+                    val param = res.word + "|" + res.imagePath + "|" + res.videoPath
+                    navController.navigate("result/" + param)
+                }
             }) {
                 Text("Search")
             }
