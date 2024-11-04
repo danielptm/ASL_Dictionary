@@ -44,11 +44,16 @@ fun Start() {
             NavHost(navController = navController, startDestination = "search") {
                 currentScreen = "Search"
                 composable("search") {
-                    Search { navController.navigate("sign") }
+                    Search(navController)
                 }
                 composable("sign") {
                     currentScreen = "Sign"
                     Sign { navController.navigate("search") }
+                }
+                composable("result/{param}") {backStackEntry ->
+                    currentScreen = "Result"
+                    val param = backStackEntry.arguments?.getString("param")
+                    Result(param = param)
                 }
             }
         }

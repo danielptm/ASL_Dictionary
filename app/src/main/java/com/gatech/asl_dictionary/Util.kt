@@ -16,7 +16,6 @@ class SignDataLocalStore : SignDataInterface  {
 
     init {
         map.put("Hello", SignData("HelloSign.png", "asdf", "Hello"))
-        map.put("asdf", SignData("not_found.png", "asdf", "asdf"))
         map.put("Thank You", SignData("ThankYouSign.png", "asdf", "Thank You"))
     }
 
@@ -30,7 +29,7 @@ class SignDataLocalStore : SignDataInterface  {
     }
 
     override fun getSignDataByText(word: String): SignData {
-        return map.getOrElse(word, {SignData("not_found.png", "n/a", "n/a")});
+        return map.getOrElse(word, {SignData("", "", "")});
     }
 
 }
