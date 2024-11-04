@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 
 suspend fun loadSignEntries(context: Context): List<SignData> {
@@ -37,8 +39,14 @@ suspend fun loadSignEntries(context: Context): List<SignData> {
     return res
 }
 
+fun searchByText(text: String): SignData {
+    val sdi: SignDataInterface = SignDataLocalStore();
+    val res = sdi.getSignDataByText(text);
+    return res;
+}
+
 @Composable
-fun Search(navigationToSecondScreen: (String) -> Unit) {
+fun Search(navController: NavController) {
     val context = LocalContext.current
     var signEntries by remember { mutableStateOf(emptyList<SignData>()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -59,7 +67,8 @@ fun Search(navigationToSecondScreen: (String) -> Unit) {
             LazyColumn {
                 items(signEntries) { entry ->
                     SignBox(entry) {
-                        navigationToSecondScreen(entry.word)
+                        val param = entry.word + "|" + entry.imagePath + "|" + entry.videoPath
+                        navController.navigate("result/" + param)
                     }
                 }
             }
@@ -80,7 +89,9 @@ fun Search(navigationToSecondScreen: (String) -> Unit) {
                 placeholder = { Text("Search") }
             )
             Button(onClick = {
-                System.out.println("hi")
+                val res = searchByText(inputText)
+                val param = res.word + "|" + res.imagePath + "|" + res.videoPath
+                navController.navigate("result/" + param)
             }) {
                 Text("Search")
             }
@@ -111,5 +122,6 @@ fun SignBox(signEntry: SignData, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun SearchPreview() {
-    Search({})
+    val navController = rememberNavController()
+    Search(navController)
 }
