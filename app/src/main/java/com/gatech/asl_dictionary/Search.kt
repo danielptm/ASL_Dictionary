@@ -1,30 +1,15 @@
 package com.gatech.asl_dictionary
 
-import android.content.Context
-import android.view.Gravity
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import android.widget.Toast
+import android.content.Context
+import android.view.Gravity
 
 suspend fun loadSignEntries(context: Context): List<SignData> {
     val sdi: SignDataInterface = SignDataLocalStore();
@@ -66,25 +54,30 @@ fun Search(navController: NavController) {
         if (isLoading) {
             Text("Loading...")
         } else {
-            LazyColumn {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(signEntries) { entry ->
                     SignBox(entry) {
                         val param = entry.word + "|" + entry.imagePath + "|" + entry.videoPath
-                        navController.navigate("result/" + param)
+                        navController.navigate("result/$param")
                     }
                 }
             }
         }
 
-
         var inputText by remember { mutableStateOf("") }
 
-        Spacer(modifier = Modifier.height(420.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
-        ){
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             TextField(
                 value = inputText,
                 onValueChange = { inputText = it },
@@ -92,38 +85,39 @@ fun Search(navController: NavController) {
             )
             Button(onClick = {
                 val res = searchByText(inputText)
-                if (res.word == "") {
-                    val toast = Toast.makeText(context, "Not found", Toast.LENGTH_LONG)
-                    toast.setGravity(Gravity.CENTER, 0 , 0)
-                    toast.show()
+                if (res.word.isEmpty()) {
+                    Toast.makeText(context, "Not found", Toast.LENGTH_LONG).apply {
+                        setGravity(Gravity.CENTER, 0, 0)
+                        show()
+                    }
                 } else {
-                    val param = res.word + "|" + res.imagePath + "|" + res.videoPath
-                    navController.navigate("result/" + param)
+                    val param = "${res.word}|${res.imagePath}|${res.videoPath}"
+                    navController.navigate("result/$param")
                 }
             }) {
                 Text("Search")
             }
-
         }
     }
 }
 
 @Composable
 fun SignBox(signEntry: SignData, onClick: () -> Unit) {
-    Box(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(8.dp)
-            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column {
-            Image(
-                painter = rememberAsyncImagePainter("file:///android_asset/images/${signEntry.imagePath}"),
-                contentDescription = null,
-                modifier = Modifier.size(100.dp)
-            )
-            Text(text = signEntry.word)
-        }
+        Image(
+            painter = rememberAsyncImagePainter("file:///android_asset/images/${signEntry.imagePath}"),
+            contentDescription = null,
+            modifier = Modifier.size(100.dp)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = signEntry.word)
     }
 }
 
