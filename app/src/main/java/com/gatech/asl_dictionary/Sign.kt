@@ -1,5 +1,6 @@
 package com.gatech.asl_dictionary
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +14,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ccg.slrcore.common.Thresholder
+import com.ccg.slrcore.engine.SimpleExecutionEngine
+import com.ccg.slrcore.system.NoTrigger
 
 @Composable
 fun Sign(navigationToSecondScreen:(String)->Unit) {
@@ -29,7 +34,7 @@ fun Sign(navigationToSecondScreen:(String)->Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Spacer(modifier = Modifier.height(800.dp))
+        Spacer(modifier = Modifier.height(300.dp))
         Button(onClick = {
             navigationToSecondScreen(name.value)
         }) {

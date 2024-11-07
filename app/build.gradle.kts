@@ -8,9 +8,25 @@ android {
     namespace = "com.gatech.asl_dictionary"
     compileSdk = 34
 
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/license.txt"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/notice.txt"
+            excludes += "META-INF/ASL2.0"
+            excludes += "META-INF/*.kotlin_module"
+            excludes += "META-INF/NOTICE.md"
+            excludes += "META-INF/LICENSE.md"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.gatech.asl_dictionary"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -39,6 +55,8 @@ android {
     }
 }
 
+
+
 dependencies {
     val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -61,4 +79,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(files("src/main/assets/slrcore-release.aar"))
+    implementation("androidx.camera:camera-core:1.3.1")
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-video:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+    implementation("androidx.camera:camera-extensions:1.3.1")
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+    implementation("org.tensorflow:tensorflow-lite-gpu-api:2.12.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.6.0")
+    implementation("org.tensorflow:tensorflow-lite:2.13.0")
 }
+
