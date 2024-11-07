@@ -77,7 +77,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(files("/Users/danieltuttle/projects/ASL_Dictionary/app/src/main/assets/slrcore-release.aar"))
+    implementation(files("src/main/assets/slrcore-release.aar"))
     implementation("androidx.camera:camera-core:1.3.1")
     implementation("androidx.camera:camera-camera2:1.3.1")
     implementation("androidx.camera:camera-lifecycle:1.3.1")
