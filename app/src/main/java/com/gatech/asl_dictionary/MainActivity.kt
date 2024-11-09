@@ -14,9 +14,31 @@ import androidx.navigation.compose.*
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
+import com.ccg.slrcore.engine.SimpleExecutionEngine
+import com.ccg.slrcore.common.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import android.widget.Toast
+import com.ccg.slrcore.system.*
+
+lateinit var SLREngine: SimpleExecutionEngine
+public val currResult = MutableStateFlow(
+    ImageMPResultWrapper(Empties.EMPTY_HANDMARKER_RESULTS, Empties.EMPTY_BITMAP)
+)
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        SLREngine = SimpleExecutionEngine(this, {
+            SLREngine.signPredictor.outputFilters.add(Thresholder(0.8F))
+        }) { sign ->
+            runOnUiThread {
+                Toast.makeText(this, "Guessed: $sign", Toast.LENGTH_SHORT).show()
+            }
+        }
+        SLREngine.buffer.trigger = NoTrigger()
+        SLREngine.posePredictor.addCallback("preview_update") { mpResult ->
+            currResult.value = mpResult
+        }
         super.onCreate(savedInstanceState)
         setContent {
             ASL_DictionaryTheme {
@@ -48,7 +70,7 @@ fun Start() {
                 }
                 composable("sign") {
                     currentScreen = "Sign"
-                    Sign { navController.navigate("search") }
+                    Sign()
                 }
                 composable("result/{param}") {backStackEntry ->
                     currentScreen = "Result"
